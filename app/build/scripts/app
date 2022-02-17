@@ -201,7 +201,7 @@ fi
 
 set -- \
         -classpath "$CLASSPATH" \
-        src.main.java.lab02.SimpleTest \
+        lab02.SimpleTest \
         "$@"
 
 # Use "xargs" to parse quoted args.

@@ -6,12 +6,24 @@
  * User Manual available at https://docs.gradle.org/7.3/userguide/building_java_projects.html
  */
 
+
+// Includes proguard from parent directory for tasks
+buildscript {
+    repositories {
+        flatDir dirs: '../../proguard-7.1.0-beta5/lib'
+    }
+    dependencies {
+        classpath ':proguard:'
+    }
+}
+
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
-    id 'java-library'
+    id 'java'
     
 }
+
 apply plugin: 'java'
 apply plugin: 'application'
 
@@ -46,7 +58,27 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'lab02.SimpleTest'
+    mainClass = 'lab03.CSVDemo'
+}
+
+mainClassName = 'CSVDemo'
+
+version = '1.0.0'
+
+jar {
+    manifest {
+        attributes  'Main-Class': '$mainClassName',
+                    'Implementation-Title':   'Sample',
+                    'Implementation-Version': version
+    }
+}
+
+// minify task
+task(minify, dependsOn: 'jar', type: proguard.gradle.ProGuardTask) {
+    configuration 'proguard.cfg'
+
+    injars 'build/libs/CSVdemo-jar.jar'
+    outjars 'build/libs/app.min.jar'
 }
 
 tasks.named('test') {
@@ -57,7 +89,7 @@ tasks.named('test') {
 sourceSets {
    main {
         java {
-            srcDir 'lab02'
+            srcDir 'lab03'
         }
     }
 }
